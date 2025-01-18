@@ -152,7 +152,7 @@ module.exports = function (Topics) {
 
 		// For every topic, place tids
 		// into watched, unreplied, or new.
-		for(let topic of topicData) {
+		for (const topic of topicData) {
 			if (topic && topic.cid &&
 				(!filterCids || filterCids.includes(topic.cid)) &&
 				(!filterTags || filterTags.every(tag => topic.tags.find(topicTag => topicTag.value === tag))) &&
@@ -175,7 +175,7 @@ module.exports = function (Topics) {
 					tidsByFilter.new.push(topic.tid);
 				}
 			}
-		};
+		}
 
 		counts[''] = tidsByFilter[''].length;
 		counts.watched = tidsByFilter.watched.length;
