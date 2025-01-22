@@ -1,9 +1,12 @@
 name: Lint and test
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
-      - f24
+      - main
   workflow_call: # Usually called from deploy
 
 defaults:
