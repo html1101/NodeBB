@@ -923,6 +923,19 @@ describe('Topic\'s', () => {
 			assert.equal(tids.indexOf(newTid), -1, 'The topic appeared in the unread list.');
 		});
 
+		it('should have no unread topics', async () => {
+			const result = await topics.post({ uid: topic.userId, title: 'Topic NOT to be ignored', content: 'Don\'t ignore me!', cid: topic.categoryId });
+			newTopic = result.topicData;
+			newTid = newTopic.tid;
+			await topics.markUnread(newTid, uid);
+			await topics.follow(newTid, uid);
+			const { showSelect, nextStart, topics: topicData } = await topics.getUnreadTopics({ cid: 0, uid: uid, start: 1, stop: 0, filter: '' });
+
+			assert.equal(topicData.length, 0, 'A topic showed up when it shouldn\'t have');
+			assert(showSelect, 'showSelect should be true');
+			assert.equal(nextStart, 0);
+		});
+
 		it('should not appear as unread in the recent list', async () => {
 			await topics.ignore(newTid, uid);
 			const results = await topics.getLatestTopics({
@@ -1234,6 +1247,14 @@ describe('Topic\'s', () => {
 				done();
 			});
 		});
+
+		it('should give no topics read', (done) => {
+			topics.markTopicNotificationsRead([], adminUid)
+				.then((res) => {
+					assert(res === undefined);
+					done();
+				});
+		});
 	});
 
 	describe('unread', () => {
@@ -1264,6 +1285,10 @@ describe('Topic\'s', () => {
 			await apiTopics.markUnread({ uid: adminUid }, { tid });
 			const hasRead = await topics.hasReadTopic(tid, adminUid);
 			assert.strictEqual(hasRead, false);
+		});
+
+		it('should do nothing', async () => {
+			assert(!(await topics.markAsRead([], adminUid)));
 		});
 
 		it('should fail with invalid data', (done) => {
@@ -1300,6 +1325,8 @@ describe('Topic\'s', () => {
 			await socketTopics.markTopicNotificationsRead({ uid: adminUid }, [tid]);
 			count = await User.notifications.getUnreadCount(adminUid);
 			assert.strictEqual(count, 0);
+			const res = await socketTopics.markTopicNotificationsRead({ uid: adminUid }, [tid]);
+			assert(res === undefined, 'notify on all read should return nothing');
 		});
 
 		it('should fail with invalid data', (done) => {
