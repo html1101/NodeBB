@@ -151,7 +151,7 @@ module.exports = function (Topics) {
 		const filterTags = params.tag && params.tag.map(tag => String(tag));
 
 		// For every topic, place tids
-		// into watched, unreplied, or new.
+		// into watched, unreplied, or new!
 		for (const topic of topicData) {
 			if (topic && topic.cid &&
 				(!filterCids || filterCids.includes(topic.cid)) &&
