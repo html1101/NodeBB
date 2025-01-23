@@ -1427,12 +1427,12 @@ describe('Topic\'s', () => {
 		it('should only return topics that have the filtered tag', async () => {
 			const category = await categories.create({
 				name: 'a big category',
-				description: 'a category'
+				description: 'a category',
 			});
 			const { cid } = category;
 
-			const data1 = await topics.post({ uid: adminUid, title: 'topic in a category', tags: ["abcd"], cid });
-			const data2 = await topics.post({ uid: adminUid, title: 'topic in a category', tags: ["defg"], cid });
+			const data1 = await topics.post({ uid: adminUid, title: 'topic in a category', tags: ['abcd'], cid });
+			const data2 = await topics.post({ uid: adminUid, title: 'topic in a category', tags: ['defg'], cid });
 			const tid1 = data1.topicData.tid;
 			const tid2 = data2.topicData.tid;
 
